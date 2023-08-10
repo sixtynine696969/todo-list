@@ -121,7 +121,6 @@ const displayController = function() {
                 todoList.removeItem(currentlySelected, listIndex);
                 removeItemsFromCurrentlySelectedList();
                 addItemsToCurrentlySelectedList();
-                return;
             })
         })
     }
@@ -138,10 +137,9 @@ const displayController = function() {
         items.forEach((item, idx) => {
             const card = fillCardTemplate(item, idx);
             cardsElement.insertAdjacentHTML('beforeend', card);
-            addEventsForCardRemove();
-        })
-        
+        });
         addEventsToToggleCardVisibility();
+        addEventsForCardRemove();
     }
 
     const handleAddItemSubmitButton = () => {
