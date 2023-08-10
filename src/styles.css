@@ -35,6 +35,64 @@ header {
 main {
     display: grid;
     grid-template-columns: 200px 1fr;
+
+    position: relative;
+    background-color: var(--white);
+}
+
+.add-item-form {
+    position: absolute;
+    right: 0;
+    left: 0;
+    margin-right: auto;
+    margin-left: auto;
+    width: 350px;
+    height: max-content;
+    background-color: var(--blue);
+
+    padding: 20px;
+    top: 25%;
+    border: 3px solid var(--dark-blue);
+    border-radius: 10px;
+    color: var(--white);
+}
+
+.add-item-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.add-item-form form div {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.add-item-form form div label {
+    font-family: 'RichEatinAllCaps';
+}
+
+.add-item-form form fieldset div input[type='radio'] {
+    margin: 5px 0;
+}
+
+.add-item-form form div input:not(input[type='radio']), .add-item-form form div textarea {
+    padding: 2px 5px;
+    flex: 1;
+}
+
+.add-item-form form fieldset legend {
+    font-family: 'RichEatinAllCaps';
+}
+
+.add-item-form form fieldset div {
+    padding: 0 10px;
+}
+
+.add-item-form form textarea, .add-item-form form input{
+    resize: none;
+    padding: 5px;
 }
 
 .sidebar {
@@ -116,12 +174,12 @@ main {
     width: 100%;
 }
 
-.add-list-window .buttons {
+.buttons {
     display: flex;
     gap: 20px
 }
 
-.add-list-window .buttons button {
+.buttons button {
     flex: 1;
     font-family: 'RichEatinAllCaps';
     padding: 5px;
@@ -129,29 +187,118 @@ main {
     border-radius: 3px;
 }
 
-.add-list-window .buttons button.add-list-submit {
+.add-list-window .buttons button.add-list-submit, .add-item-form button.add-item-submit {
     background-color: rgb(136, 255, 136);
 }
 
-.add-list-window .buttons button.add-list-submit:hover {
+.add-list-window .buttons button.add-list-submit:hover, .add-item-form button.add-item-submit:hover {
     background-color: rgb(36, 255, 36);
 }
 
-.add-list-window .buttons button.add-list-close {
+.add-list-window .buttons button.add-list-close, .add-item-form button.add-item-close {
     background-color: rgb(255, 117, 117);
 }
 
-.add-list-window .buttons button.add-list-close:hover {
+.add-list-window .buttons button.add-list-close:hover, .add-item-form button.add-item-close:hover {
     background-color: rgb(255, 45, 45);
 }
 
 .cards {
     display: grid;
-    grid-template-rows: repeat(1fr)
+    grid-auto-rows: max-content;
+    padding: 5px;
+    gap: 5px;
 }
 
 .cards button.add-task {
     height: 30px;
     font-family: 'RichEatinAllCaps';
     font-size: 1.3rem;
+}
+
+.cards .card:not(.add-task) {
+    background-color: var(--gray);
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    position: relative;
+}
+
+.card {
+    border: 1px solid var(--dark-blue);
+    border-radius: 10px;
+}
+
+.card div {
+    font-family: 'RichEatinAllCaps';
+    font-size: 1.2rem;
+}
+
+.card div span:nth-child(2) {
+    margin-left: 0.5rem;
+}
+
+.card div.invisible {
+    position: absolute;
+    visibility: hidden;
+}
+
+.card .card-buttons {
+    display: flex;
+    justify-content: center;
+}
+
+.card .expand-button {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+
+    margin: 20px 0;
+    right: 5px;
+    padding: 0 5px;
+
+    display: flex;
+    align-items: center;
+
+    font-size: 1.2rem;
+
+    background-color: var(--blue);
+    border: 1px solid var(--blue);
+    color: var(--white);
+    border: none;
+    border-radius: 10px;
+}
+
+.card .expand-button:hover {
+    background-color: var(--white);
+    border: 1px solid var(--blue);
+    color: var(--dark-blue);
+}
+
+.card .remove-button {
+    background-color: rgb(255, 101, 101);
+    border-radius: 10px;
+    border: none;
+    border: none;
+    padding: 5px 20px;
+    font-family: 'RichEatinAllCaps';
+    width: 200px;
+}
+
+.card .remove-button.invisible {
+    visibility: hidden;
+}
+
+.card .remove-button:hover {
+    background-color: rgb(255, 73, 73);
+}
+
+.cards .card.priority-urgent {
+    background-color: rgb(255, 198, 198);
+}
+
+.cards .card.priority-mid {
+    background-color: rgb(219, 255, 219);
 }

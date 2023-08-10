@@ -7,13 +7,175 @@ function todoItem(title, description, dueDate, priority, notes, checkList) {
 const displayController = function() {
     const sidebar = document.querySelector('.sidebar');
     const addListButton = document.querySelector('button.add-list');
-    const getCardsElement = () => document.querySelector('.cards')
+    const main = document.querySelector('main');
+    const cardsElement = document.querySelector('.cards');
 
+    const getCardsElement = () => document.querySelector('.cards')
+    const getCardsEelemtChildren = () => document.querySelectorAll('.card')
     const getButtons = () => document.querySelectorAll('.sidebar > button:not(button.add-list)');
     const getAddListWindow = () => document.querySelector('.add-list-window');
     const getAddTaskButton = () => document.querySelector('button.add-task');
+    const getAddItemForm = () => document.querySelector('.add-item-form');
+    const getSelectedElementId = () => document.querySelector('.selected').id;
 
     const capitalizeString = (string) => `${string[0].toUpperCase()}${string.slice(1)}`;
+
+    const removeAllCardsChildren = () => getCardsEelemtChildren().forEach(i => i.remove());
+
+    const addItemFormTemplate = `<div class="add-item-form">
+    <form action="" class="add-item-window">
+        <!-- title, description, dueDate, priority, notes, checkList -->
+        <div>
+            <label for="title">Title:</label>
+            <input type="text" name="title" id="title">
+        </div>
+        <div>
+            <label for="desc">Description:</label>
+            <input type="text" name="desc" id="desc">
+        </div>
+        <div>
+            <label for="duedate">Due Date:</label>
+            <input type="date" name="duedate" id="duedate">
+        </div>
+        <fieldset>
+            <legend>Priority</legend>
+            <div>
+                <input type="radio" name="priority" id="urgent" value="urgent">
+                <label for="priority">Urgent</label>
+            </div>
+            <div>
+                <input type="radio" name="priority" id="mid" value="mid">
+                <label for="priority">Mid</label>
+            </div>
+            <div>
+                <input type="radio" name="priority" id="low" value="low" checked>
+                <label for="priority">Low</label>
+            </div>
+        </fieldset>
+        <div>
+            <label for="notes">Notes:</label>
+            <textarea name="notes" id="notes" rows="3"></textarea>
+        </div>
+        <div class="buttons">
+            <button type="button" class="add-item-submit">Submit</button>
+            <button type="button" class="add-item-close">Close</button>
+        </div>
+    </form>`;
+
+    const fillCardTemplate = (obj) => {
+        console.log(todoList.getAllTodoItems());
+        return `<div class="card priority-${obj.priority}">
+        <div class="title">
+            <span>Title:</span>
+            <span>${obj.title ? obj.title : 'Not Set'}</span>
+        </div>
+        <div class="desc invisible">
+            <span>Description:</span>
+            <span>${obj.description ? obj.description : 'Not Set'}</span>
+        </div>
+        <div class="dueDate">
+            <span>DueDate:</span>
+            <span>${obj.dueDate ? obj.dueDate : 'Not Set'}</span>
+        </div>
+        <div class="notes invisible">
+            <span>Notes:</span>
+            <span>${obj.notes ? obj.notes : 'Not Set'}</span>
+        </div>
+        <div class="card-buttons invisible">
+            <button type="button" class="remove-button">Remove</button>
+        </div>
+        <button type="button" class="expand-button">⌄</button>
+    </div>`
+    }
+
+    const addEventsToToggleCardVisibility = function() {
+        const cards = document.querySelectorAll('div.card');
+        cards.forEach(card => {
+            const expandButton = card.querySelector('.expand-button');
+            expandButton.addEventListener('click', (e) => {
+                const innerDivs = card.querySelectorAll('div');
+                if (!card.querySelector('.invisible')) {
+                    innerDivs.forEach(div => {
+                        if (!(div.classList.contains('dueDate') || div.classList.contains('title'))) {
+                            div.classList.add('invisible');
+                        }
+                    })
+                    return;
+                }
+                innerDivs.forEach(div => {
+                    div.classList.remove('invisible');
+                })
+            })
+        })
+    }
+
+    const removeItemsFromCurrentlySelectedList = () => {
+        removeAllCardsChildren();
+    }
+
+    const addItemsToCurrentlySelectedList = () => {
+        addAddTaskButton();
+
+        const selectedId = getSelectedElementId();
+        const items = todoList.getItemsFromList(selectedId);
+        items.forEach(i => {
+            const card = fillCardTemplate(i);
+            cardsElement.insertAdjacentHTML('beforeend', card);
+        })
+        
+
+        addEventsToToggleCardVisibility();
+       
+    }
+
+    const handleAddItemSubmitButton = () => {
+        const form = getAddItemForm().querySelector('form');
+        
+        const title = form.querySelector('input[id="title"]').value;
+        const desc = form.querySelector('input[id="desc"]').value;
+        const dueDate = form.querySelector('input[id="duedate"').value;
+        const priority = form.querySelector('input[type="radio"]:checked').value;
+        const notes = form.querySelector('textarea').value;
+
+        const selectedElementId = getSelectedElementId();
+        glue.parseItemAndAddToList({title, desc, dueDate, priority, notes}, selectedElementId);
+
+        getAddItemForm().remove();
+
+        removeItemsFromCurrentlySelectedList();
+        addItemsToCurrentlySelectedList();
+    }
+
+    const handleAddItemButtons = () => {
+        const submitButton = document.querySelector('.add-item-form .add-item-submit');
+        const closeButton = document.querySelector('.add-item-form .add-item-close');
+
+        closeButton.addEventListener('click', () => {
+            getAddItemForm().remove();
+        })
+
+        submitButton.addEventListener('click', handleAddItemSubmitButton);
+    }
+
+    const addEventsToAddTaskButton = () => {
+        getAddTaskButton().addEventListener('click', () => {
+            if (!getAddItemForm()) {
+                main.insertAdjacentHTML('beforeend', addItemFormTemplate);
+                handleAddItemButtons();
+            }
+        })
+    }
+
+    const addAddTaskButton = () => {
+        const addTaskButton = document.createElement('button');
+        addTaskButton.setAttribute('type', 'button');
+        addTaskButton.classList.add('card');
+        addTaskButton.classList.add('add-task');
+        addTaskButton.textContent = '+ Add Task';
+
+        getCardsElement().appendChild(addTaskButton);
+        addEventsToAddTaskButton();
+    }
 
     const unselectButtons = () => {
         removeAddTaskButton();
@@ -29,20 +191,10 @@ const displayController = function() {
         }
     }
 
-    const addAddTaskButton = () => {
-        const addTaskButton = document.createElement('button');
-        addTaskButton.setAttribute('type', 'button');
-        addTaskButton.classList.add('card');
-        addTaskButton.classList.add('add-task');
-        addTaskButton.textContent = '+ Add Task';
-
-        getCardsElement().appendChild(addTaskButton);
-    }
-
     const selectClickedButton = (e) => {
         e.target.classList.add('selected');
-
-        addAddTaskButton();
+        removeItemsFromCurrentlySelectedList();
+        addItemsToCurrentlySelectedList();
     }
 
     const removeAllLists = () => {
@@ -115,6 +267,9 @@ const displayController = function() {
     const addEventsToAddListButton = () => {
         addListButton.addEventListener('click', e => {
             displayAddListWindow();
+
+            // due to some bug i cannot fix
+            removeAllCardsChildren();
         })
     }
 
@@ -143,8 +298,7 @@ const displayController = function() {
     };
 
     return { 
-        drawListButtons, addEventsToAddListButton, removeAllLists,
-        removeAddTaskButton
+        drawListButtons, addEventsToAddListButton, removeAllLists
     };
 }();
 
@@ -179,10 +333,23 @@ const todoList = function() {
         return todoItems;
     }
 
-    return { getNamesOfLists, addNewList, getAllTodoItems };
+    const addItemToList = (arr, listName) => {
+        list[listName].push(new todoItem(...arr));
+    }
+
+    const getItemsFromList = (listName) => list[listName]; 
+
+    return { getNamesOfLists, addNewList, getAllTodoItems, addItemToList, addItemToList, getItemsFromList };
 }();
 
 const glue = function() {
+    const parseItemAndAddToList = (obj, listName) => {
+        arr = [];
+        for (const key in obj) {
+            arr.push(obj[key]);
+        }
+        todoList.addItemToList(arr, listName);
+    }
 
     const addToListAndDraw = (listName) => {
         displayController.removeAllLists();
@@ -197,9 +364,8 @@ const glue = function() {
         const namesOfLists = todoList.getNamesOfLists();
         displayController.drawListButtons(namesOfLists);
         displayController.addEventsToAddListButton();
-        displayController.removeAddTaskButton();
     }();
 
-    return { addToListAndDraw };
+    return { addToListAndDraw, parseItemAndAddToList };
     
 }();
