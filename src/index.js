@@ -9,7 +9,6 @@ const displayController = function() {
     const addListButton = document.querySelector('button.add-list');
     const main = document.querySelector('main');
     const cardsElement = document.querySelector('.cards');
-    let selected = null;
 
     const getCardsElement = () => document.querySelector('.cards')
     const getCardsEelemtChildren = () => document.querySelectorAll('.card')
@@ -240,7 +239,7 @@ const displayController = function() {
 
         submitButton.addEventListener('click', () => {
             const input = getAddListWindow().querySelector('input');
-            inputValue = input.value;
+            const inputValue = input.value;
             if(!inputValue) return;
 
             glue.addToListAndDraw(inputValue);
