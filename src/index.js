@@ -9,6 +9,7 @@ const displayController = function() {
     const addListButton = document.querySelector('button.add-list');
     const main = document.querySelector('main');
     const cardsElement = document.querySelector('.cards');
+    let selected = null;
 
     const getCardsElement = () => document.querySelector('.cards')
     const getCardsEelemtChildren = () => document.querySelectorAll('.card')
@@ -125,6 +126,19 @@ const displayController = function() {
         })
     }
 
+    const removeRemoveButton = () => document.querySelectorAll('.remove-button').forEach(i => i.remove());
+
+    const displayAllItems = () => {
+        const items = todoList.getAllTodoItems();
+        items.forEach((item, idx) => {
+            const card = fillCardTemplate(item, idx);
+            cardsElement.insertAdjacentHTML('beforeend', card);
+        });
+        removeAddTaskButton();
+        addEventsToToggleCardVisibility();
+        removeRemoveButton();
+    }
+
     const removeItemsFromCurrentlySelectedList = () => {
         removeAllCardsChildren();
     }
@@ -221,13 +235,18 @@ const displayController = function() {
 
         closeButton.addEventListener('click', () => {
             getAddListWindow().remove();
+            displayAllItems();
         })
 
         submitButton.addEventListener('click', () => {
-            const input = getAddListWindow().querySelector('input').value;
-            glue.addToListAndDraw(input);
+            const input = getAddListWindow().querySelector('input');
+            inputValue = input.value;
+            if(!inputValue) return;
+
+            glue.addToListAndDraw(inputValue);
             getAddListWindow().remove();
             removeAddTaskButton();
+            displayAllItems();
         })
     }
 
@@ -312,7 +331,7 @@ const displayController = function() {
     };
 
     return { 
-        drawListButtons, addEventsToAddListButton, removeAllLists
+        drawListButtons, addEventsToAddListButton, removeAllLists, displayAllItems,
     };
 }();
 
@@ -320,9 +339,18 @@ const todoList = function() {
     let list = {};
 
     list = {
-        'inbox': [new todoItem('test', 'test', 'test', 'test', 'test', 'test')],
-        'today': [],
-        'week': [],
+        'inbox': [
+            new todoItem('Take a walk', 'A long Walk...', '2023-09-01', 'mid','With my ferret'),
+            new todoItem('Brush teeth', 'I got a new tooth paste to try out', '2023-11-28', 'low','best to brush them while pooping to not waste time'),
+            new todoItem('Buy gucci flip flops', 'gotta flex on dem ho*s', '2024-11-31', 'urgent','buy a an off white tee for double flexerino'),
+
+        ],
+        'today': [
+            new todoItem('Learn JavaScript', '', '2023-11-01', 'mid',''),
+        ],
+        'week': [
+            new todoItem('Clean my room', '', '2023-08-01', 'mid',''),
+        ],
     };
 
     const getNamesOfLists = () => {
@@ -382,6 +410,7 @@ const glue = function() {
         const namesOfLists = todoList.getNamesOfLists();
         displayController.drawListButtons(namesOfLists);
         displayController.addEventsToAddListButton();
+        displayController.displayAllItems();
     }();
 
     return { addToListAndDraw, parseItemAndAddToList };
