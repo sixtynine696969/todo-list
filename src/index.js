@@ -62,9 +62,8 @@ const displayController = function() {
         </div>
     </form>`;
 
-    const fillCardTemplate = (obj) => {
-        console.log(todoList.getAllTodoItems());
-        return `<div class="card priority-${obj.priority}">
+    const fillCardTemplate = (obj, idx) => {
+        return `<div class="card priority-${obj.priority}" data-item-index="${idx}">
         <div class="title">
             <span>Title:</span>
             <span>${obj.title ? obj.title : 'Not Set'}</span>
@@ -109,6 +108,24 @@ const displayController = function() {
         })
     }
 
+    const addEventsForCardRemove = () => {
+        const cards = getCardsEelemtChildren();
+        cards.forEach(card => {
+            const currentlySelected = getSelectedElementId();
+            const removeButton = card.querySelector('button.remove-button');
+
+            if (!removeButton) return;
+
+            removeButton.addEventListener('click', () => {
+                const listIndex = card.dataset['itemIndex'];
+                todoList.removeItem(currentlySelected, listIndex);
+                removeItemsFromCurrentlySelectedList();
+                addItemsToCurrentlySelectedList();
+                return;
+            })
+        })
+    }
+
     const removeItemsFromCurrentlySelectedList = () => {
         removeAllCardsChildren();
     }
@@ -118,14 +135,13 @@ const displayController = function() {
 
         const selectedId = getSelectedElementId();
         const items = todoList.getItemsFromList(selectedId);
-        items.forEach(i => {
-            const card = fillCardTemplate(i);
+        items.forEach((item, idx) => {
+            const card = fillCardTemplate(item, idx);
             cardsElement.insertAdjacentHTML('beforeend', card);
+            addEventsForCardRemove();
         })
         
-
         addEventsToToggleCardVisibility();
-       
     }
 
     const handleAddItemSubmitButton = () => {
@@ -339,7 +355,11 @@ const todoList = function() {
 
     const getItemsFromList = (listName) => list[listName]; 
 
-    return { getNamesOfLists, addNewList, getAllTodoItems, addItemToList, addItemToList, getItemsFromList };
+    const removeItem = (listName, index) => {
+        list[listName].splice(index, 1);
+    };
+
+    return { getNamesOfLists, addNewList, getAllTodoItems, addItemToList, addItemToList, getItemsFromList, removeItem };
 }();
 
 const glue = function() {
