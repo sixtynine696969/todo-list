@@ -144,3 +144,14 @@ main {
 .add-list-window .buttons button.add-list-close:hover {
     background-color: rgb(255, 45, 45);
 }
+
+.cards {
+    display: grid;
+    grid-template-rows: repeat(1fr)
+}
+
+.cards button.add-task {
+    height: 30px;
+    font-family: 'RichEatinAllCaps';
+    font-size: 1.3rem;
+}

@@ -7,21 +7,42 @@ function todoItem(title, description, dueDate, priority, notes, checkList) {
 const displayController = function() {
     const sidebar = document.querySelector('.sidebar');
     const addListButton = document.querySelector('button.add-list');
+    const getCardsElement = () => document.querySelector('.cards')
 
     const getButtons = () => document.querySelectorAll('.sidebar > button:not(button.add-list)');
-    const getAddListWindow = () => document.querySelector('.add-list-window')
+    const getAddListWindow = () => document.querySelector('.add-list-window');
+    const getAddTaskButton = () => document.querySelector('button.add-task');
 
     const capitalizeString = (string) => `${string[0].toUpperCase()}${string.slice(1)}`;
 
     const unselectButtons = () => {
+        removeAddTaskButton();
         const buttons = getButtons();
         buttons.forEach(button => {
             button.classList.remove('selected');
         });
     };
 
+    const removeAddTaskButton = () => {
+        if (getAddTaskButton()) {
+            getAddTaskButton().remove();
+        }
+    }
+
+    const addAddTaskButton = () => {
+        const addTaskButton = document.createElement('button');
+        addTaskButton.setAttribute('type', 'button');
+        addTaskButton.classList.add('card');
+        addTaskButton.classList.add('add-task');
+        addTaskButton.textContent = '+ Add Task';
+
+        getCardsElement().appendChild(addTaskButton);
+    }
+
     const selectClickedButton = (e) => {
         e.target.classList.add('selected');
+
+        addAddTaskButton();
     }
 
     const removeAllLists = () => {
@@ -40,6 +61,7 @@ const displayController = function() {
             const input = getAddListWindow().querySelector('input').value;
             glue.addToListAndDraw(input);
             getAddListWindow().remove();
+            removeAddTaskButton();
         })
     }
 
@@ -120,7 +142,10 @@ const displayController = function() {
         addEvenetsToButtons();
     };
 
-    return { drawListButtons, addEventsToAddListButton, removeAllLists };
+    return { 
+        drawListButtons, addEventsToAddListButton, removeAllLists,
+        removeAddTaskButton
+    };
 }();
 
 const todoList = function() {
@@ -172,6 +197,7 @@ const glue = function() {
         const namesOfLists = todoList.getNamesOfLists();
         displayController.drawListButtons(namesOfLists);
         displayController.addEventsToAddListButton();
+        displayController.removeAddTaskButton();
     }();
 
     return { addToListAndDraw };
