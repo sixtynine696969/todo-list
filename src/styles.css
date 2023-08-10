@@ -1,0 +1,146 @@
+@import url('https://fontlibrary.org//face/rich-eatin');
+
+*, *::before, *::after {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --white: #F9F7F7;
+    --gray: #DBE2EF;
+    --blue: #3F72AF;
+    --dark-blue: #112D4E;
+}
+
+body {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: 50px 1fr;
+}
+
+header {
+    font-family: 'RichEatinAllCaps';
+    letter-spacing: 0.5rem;
+    font-weight: bold;
+    background-color: var(--dark-blue);
+    color: var(--white);
+    font-size: 2rem;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+main {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+}
+
+.sidebar {
+    background-color: var(--blue);
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    padding: 20px 10px;
+
+    position: relative;
+}
+
+.sidebar button {
+    background-color: var(--blue);
+    color: var(--white);
+    font-family: 'RichEatinAllCaps';
+    font-size: 1.4rem;
+
+    border: none;
+    padding: 5px 20px;
+    border-radius: 10px;
+}
+
+.sidebar button:hover {
+    background-color: var(--white);
+    color: var(--blue);
+}
+
+.sidebar button.selected {
+    background-color: var(--dark-blue);
+    color: var(--white);
+}
+
+.sidebar button.add-list {
+    font-family: 'RichEatinAllCaps';
+    position: absolute;
+    bottom: 10px;
+    background-color: #112D4E;
+    border-radius: 100%;
+    height: 50px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sidebar button.add-list:hover {
+    background-color: var(--white);
+    color: var(--dark-blue);
+}
+
+.add-list-window {
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    text-align: center;
+    top: 25%;
+
+    font-family: 'RichEatinAllCaps';
+    color: var(--white);
+    font-size: 1.2rem;
+    background-color: var(--blue);
+    width: 250px;
+    padding: 25px;
+    border: 2px solid var(--dark-blue);
+    border-radius: 10px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+}
+
+.add-list-window form input {
+    width: 100%;
+}
+
+.add-list-window .buttons {
+    display: flex;
+    gap: 20px
+}
+
+.add-list-window .buttons button {
+    flex: 1;
+    font-family: 'RichEatinAllCaps';
+    padding: 5px;
+    border: none;
+    border-radius: 3px;
+}
+
+.add-list-window .buttons button.add-list-submit {
+    background-color: rgb(136, 255, 136);
+}
+
+.add-list-window .buttons button.add-list-submit:hover {
+    background-color: rgb(36, 255, 36);
+}
+
+.add-list-window .buttons button.add-list-close {
+    background-color: rgb(255, 117, 117);
+}
+
+.add-list-window .buttons button.add-list-close:hover {
+    background-color: rgb(255, 45, 45);
+}
