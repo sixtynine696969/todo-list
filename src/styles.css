@@ -216,6 +216,11 @@ main {
     font-size: 1.3rem;
 }
 
+.cards button.add-task:hover {
+    background-color: var(--blue);
+    color: var(--white);
+}
+
 .cards .card:not(.add-task) {
     background-color: var(--gray);
     padding: 10px 20px;
