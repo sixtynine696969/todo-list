@@ -1,4 +1,4 @@
-// import './styles.css'
+import './styles.css'
 
 function todoItem(title, description, dueDate, priority, notes, checkList) {
     return { title, description, dueDate, priority, notes, checkList };
