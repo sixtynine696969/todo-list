@@ -384,16 +384,39 @@ const todoList = function() {
         list[listName].splice(index, 1);
     };
 
-    return { getNamesOfLists, addNewList, getAllTodoItems, addItemToList, addItemToList, getItemsFromList, removeItem };
+    const getList = () => list;
+    const setListFromStorage = (obj) => list = obj; 
+
+    return { getNamesOfLists, addNewList, getAllTodoItems, addItemToList, addItemToList, 
+        getItemsFromList, removeItem, getList, setListFromStorage };
 }();
 
+const storageController = function() {
+    const loadFromStorage = () => {
+        const storedList = JSON.parse(localStorage.getItem('myObject'));
+        if (!storedList) return;
+        todoList.setListFromStorage(storedList);
+    }
+    
+    const saveStorage = () => {
+        localStorage.clear();
+        console.log(JSON.stringify(todoList.getList()));
+        localStorage.setItem('myObject', JSON.stringify(todoList.getList()));
+    }
+
+    return { loadFromStorage, saveStorage }
+}()
+
 const glue = function() {
+
     const parseItemAndAddToList = (obj, listName) => {
-        arr = [];
+        const arr = [];
         for (const key in obj) {
             arr.push(obj[key]);
         }
         todoList.addItemToList(arr, listName);
+
+        storageController.saveStorage();
     }
 
     const addToListAndDraw = (listName) => {
@@ -405,6 +428,8 @@ const glue = function() {
     } 
 
     const _init = function() {
+        storageController.loadFromStorage();
+
         displayController.addEventsToAddListButton();
         const namesOfLists = todoList.getNamesOfLists();
         displayController.drawListButtons(namesOfLists);
