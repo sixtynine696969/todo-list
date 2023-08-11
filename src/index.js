@@ -393,8 +393,9 @@ const todoList = function() {
 
 const storageController = function() {
     const loadFromStorage = () => {
-        const storedList = JSON.parse(localStorage.getItem('myObject'));
-        if (!storedList) return;
+        const obj = localStorage.getItem('myObject');
+        if (!obj) return
+        const storedList = JSON.parse(obj);
         todoList.setListFromStorage(storedList);
     }
     
