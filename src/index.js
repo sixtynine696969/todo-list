@@ -400,8 +400,6 @@ const storageController = function() {
     }
     
     const saveStorage = () => {
-        localStorage.clear();
-        console.log(JSON.stringify(todoList.getList()));
         localStorage.setItem('myObject', JSON.stringify(todoList.getList()));
     }
 
